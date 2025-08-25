@@ -63,7 +63,7 @@ col1, col2, col3, col4, col5 = st.columns(5)
 col1.metric("🎯 Accuracy", f"{accuracy * 100:.2f}%")
 col2.metric("📍 Precision", f"{precision * 100:.2f}%")
 col3.metric("🚀 Recall", f"{recall * 100:.2f}%")
-col4.metric("� F1 Score", f"{f1 * 100:.2f}%")
+col4.metric("💡 F1 Score", f"{f1 * 100:.2f}%")
 col5.metric("📊 AUC", f"{auc:.2f}")
 
 
@@ -176,4 +176,3 @@ st.download_button(
     file_name='processed_udemy_data.csv',
     mime='text/csv',
 )
-�
