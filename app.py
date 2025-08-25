@@ -70,7 +70,7 @@ col5.metric("📊 AUC", f"{auc:.2f}")
 # --- Sidebar for Visualizations ---
 st.sidebar.title("📁 Visualizations")
 option = st.sidebar.selectbox("Select a graph", [
-    "Feature Importance", "Subject vs Success", "Level Distribution", "Price Distribution"
+    "Feature Importance", "Subject vs Success", "Level Distribution", "Price Distribution", "Course Quality (Reviews vs. Subscribers)"
 ])
 
 
@@ -107,6 +107,17 @@ elif option == "Price Distribution":
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.histplot(data=df[df['price'] < 200], x='price', bins=30, kde=True, ax=ax, color='purple')
     ax.set_title("Price Distribution (Under 200)", fontsize=16)
+    st.pyplot(fig)
+
+elif option == "Course Quality (Reviews vs. Subscribers)":
+    st.write("Shows the relationship between course subscribers and reviews, colored by subject.")
+    fig, ax = plt.subplots(figsize=(10, 7))
+    sns.scatterplot(data=df, x='num_subscribers', y='num_reviews', hue='subject', ax=ax, alpha=0.7)
+    ax.set_title("Course Quality: Reviews vs. Subscribers", fontsize=16)
+    ax.set_xlabel("Number of Subscribers")
+    ax.set_ylabel("Number of Reviews")
+    ax.set_xscale('log') # Use a log scale for better visualization of wide-ranging data
+    ax.set_yscale('log')
     st.pyplot(fig)
 
 
@@ -157,6 +168,20 @@ with st.form("predict_form"):
             st.success(f"✅ This course is likely to be **successful**! (Probability: {prediction_proba:.2%})")
         else:
             st.warning(f"⚠️ This course may **not perform well**. (Success Probability: {prediction_proba:.2%})")
+
+
+# --- Feedback Section ---
+st.markdown("---")
+st.markdown("## 📝 Course Feedback")
+st.write("Have feedback on a course? Please share it below!")
+
+feedback_text = st.text_area("Your feedback here...")
+if st.button("Submit Feedback"):
+    if feedback_text:
+        st.success("Thank you for your feedback! It has been recorded.")
+        # In a real application, you would save this feedback to a database.
+    else:
+        st.warning("Please enter some feedback before submitting.")
 
 
 # --- Download Processed Data ---
