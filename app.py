@@ -11,6 +11,10 @@ import base64
 # --- Page Configuration ---
 st.set_page_config(page_title="Udemy Course Dashboard", layout="wide")
 
+# --- Initialize Session State for Feedback ---
+if 'feedback' not in st.session_state:
+    st.session_state.feedback = []
+
 # --- Title ---
 st.title("📚 Udemy Course Success Predictor & Visualizer")
 
@@ -175,13 +179,21 @@ st.markdown("---")
 st.markdown("## 📝 Course Feedback")
 st.write("Have feedback on a course? Please share it below!")
 
-feedback_text = st.text_area("Your feedback here...")
+feedback_text = st.text_area("Your feedback here...", key="feedback_input")
 if st.button("Submit Feedback"):
     if feedback_text:
+        st.session_state.feedback.append(feedback_text)
         st.success("Thank you for your feedback! It has been recorded.")
-        # In a real application, you would save this feedback to a database.
     else:
         st.warning("Please enter some feedback before submitting.")
+
+# --- Display Submitted Feedback ---
+st.markdown("### 💬 Submitted Feedback")
+if st.session_state.feedback:
+    for i, fb in enumerate(st.session_state.feedback):
+        st.info(f"**Feedback #{i+1}:** {fb}")
+else:
+    st.write("No feedback has been submitted yet.")
 
 
 # --- Download Processed Data ---
