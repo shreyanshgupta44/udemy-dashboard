@@ -80,8 +80,9 @@ if selected_segment != 'All':
 if selected_tier != 'All':
     filtered_df = filtered_df[filtered_df['level'] == selected_tier]
 
+# Updated graph options
 option = st.sidebar.selectbox("Select a graph", [
-    "Key Retention Drivers", "Segment vs Retention", "Service Tier Distribution", "Service Cost Distribution", "Customer Engagement (Reviews vs. Usage)"
+    "Key Retention Drivers", "Segment vs Retention", "Service Tier Distribution", "Service Cost Distribution"
 ])
 
 
@@ -106,8 +107,24 @@ if not filtered_df.empty:
         sns.countplot(data=filtered_df, x='subject', hue='is_successful', ax=ax, palette='muted')
         plt.xticks(rotation=45, ha='right')
         ax.set_title("Customer Segment vs Retention Rate", fontsize=16)
+        ax.set_xlabel("Customer Segment")
+        ax.set_ylabel("Number of Customers")
     
-    # Add other graph logic here...
+    # --- ADDED GRAPH LOGIC ---
+    elif option == "Service Tier Distribution":
+        st.write("Shows the distribution of customers across different service tiers, segmented by retention status.")
+        sns.countplot(data=filtered_df, x='level', hue='is_successful', ax=ax, palette='pastel', order=df['level'].value_counts().index)
+        ax.set_title("Distribution of Service Tiers by Retention Status", fontsize=16)
+        ax.set_xlabel("Service Tier")
+        ax.set_ylabel("Number of Customers")
+
+    elif option == "Service Cost Distribution":
+        st.write("Displays the distribution of service costs (prices), indicating how cost affects retention.")
+        sns.histplot(data=filtered_df, x='price', hue='is_successful', ax=ax, multiple="stack", palette="flare", bins=30)
+        ax.set_title("Distribution of Service Cost by Retention Status", fontsize=16)
+        ax.set_xlabel("Service Cost ($)")
+        ax.set_ylabel("Number of Customers")
+    # --- END OF ADDED LOGIC ---
     
     st.pyplot(fig)
 else:
